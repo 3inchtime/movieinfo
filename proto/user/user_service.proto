@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package movieinfo.user;
+
+option go_package = "github.com/3inchtime/movieinfo/proto/user";
+
+import "user/user.proto";
+import "common/common.proto";
+
+// 用户服务 - 简化版本，只保留核心功能
+service UserService {
+  // 基础用户管理
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
+  rpc GetUser(GetUserRequest) returns (GetUserResponse);
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse);
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
+  rpc ListUsers(ListUsersRequest) returns (ListUsersResponse);
+  
+  // 认证功能
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  
+  // 健康检查
+  rpc HealthCheck(movieinfo.common.HealthCheckRequest) returns (movieinfo.common.HealthCheckResponse);
+}

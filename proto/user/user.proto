@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+package movieinfo.user;
+
+option go_package = "github.com/3inchtime/movieinfo/proto/user";
+
+import "google/protobuf/timestamp.proto";
+import "common/common.proto";
+
+// 用户信息 - 简化版本，只保留核心字段
+message User {
+  int64 id = 1;             // 用户ID
+  string username = 2;      // 用户名
+  string email = 3;         // 邮箱
+  string nickname = 4;      // 昵称
+  string avatar = 5;        // 头像URL
+  UserStatus status = 6;    // 用户状态
+  google.protobuf.Timestamp created_at = 7;  // 创建时间
+  google.protobuf.Timestamp updated_at = 8;  // 更新时间
+}
+
+// 简化的用户状态
+enum UserStatus {
+  USER_STATUS_UNKNOWN = 0;
+  USER_STATUS_ACTIVE = 1;   // 活跃
+  USER_STATUS_INACTIVE = 2; // 非活跃
+}
+
+// 创建用户请求 - 只保留必要字段
+message CreateUserRequest {
+  string username = 1;      // 用户名
+  string email = 2;         // 邮箱
+  string password = 3;      // 密码
+  string nickname = 4;      // 昵称
+}
+
+message CreateUserResponse {
+  movieinfo.common.CommonResponse common = 1;
+  User user = 2;            // 创建的用户信息
+}
+
+// 获取用户请求 - 简化标识符
+message GetUserRequest {
+  oneof identifier {
+    int64 id = 1;           // 用户ID
+    string username = 2;    // 用户名
+  }
+}
+
+message GetUserResponse {
+  movieinfo.common.CommonResponse common = 1;
+  User user = 2;            // 用户信息
+}
+
+// 更新用户请求 - 简化字段
+message UpdateUserRequest {
+  int64 id = 1;             // 用户ID
+  string nickname = 2;      // 昵称
+  string avatar = 3;        // 头像URL
+}
+
+message UpdateUserResponse {
+  movieinfo.common.CommonResponse common = 1;
+  User user = 2;            // 更新后的用户信息
+}
+
+// 删除用户请求
+message DeleteUserRequest {
+  int64 id = 1;             // 用户ID
+}
+
+message DeleteUserResponse {
+  movieinfo.common.CommonResponse common = 1;
+}
+
+// 列出用户请求 - 简化过滤条件
+message ListUsersRequest {
+  movieinfo.common.PageRequest page = 1; // 分页参数
+  UserStatus status = 2;    // 用户状态过滤（可选）
+  string search = 3;        // 搜索关键词（可选）
+}
+
+message ListUsersResponse {
+  movieinfo.common.CommonResponse common = 1;
+  repeated User users = 2;  // 用户列表
+  movieinfo.common.PageResponse page = 3; // 分页信息
+}
+
+// 用户登录请求
+message LoginRequest {
+  string username = 1;      // 用户名或邮箱
+  string password = 2;      // 密码
+}
+
+message LoginResponse {
+  movieinfo.common.CommonResponse common = 1;
+  string access_token = 2;  // 访问令牌
+  int64 expires_in = 3;     // 过期时间（秒）
+  User user = 4;            // 用户信息
+}
+
+// 用户登出请求
+message LogoutRequest {
+  string access_token = 1;  // 访问令牌
+}
+
+message LogoutResponse {
+  movieinfo.common.CommonResponse common = 1;
+}
+
+// 修改密码请求
+message ChangePasswordRequest {
+  int64 user_id = 1;        // 用户ID
+  string old_password = 2;  // 旧密码
+  string new_password = 3;  // 新密码
+}
+
+message ChangePasswordResponse {
+  movieinfo.common.CommonResponse common = 1;
+}
+
+// 发送重置码响应
+message SendResetCodeResponse {
+  movieinfo.common.CommonResponse common = 1;
+  string message = 2;        // 提示信息
+}

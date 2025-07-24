@@ -1,0 +1,55 @@
+# gRPC服务配置 - 简化版本
+# 根据简化版gRPC协议定义的配置文件
+
+grpc:
+  # 服务器配置
+  server:
+    # 监听地址
+    host: "0.0.0.0"
+    port: 9090
+    
+    # 连接配置
+    max_recv_msg_size: 4194304  # 4MB
+    max_send_msg_size: 4194304  # 4MB
+    
+    # 超时配置
+    connection_timeout: 5s
+    keepalive:
+      time: 30s
+      timeout: 5s
+      
+  # 客户端配置
+  client:
+    # 连接配置
+    max_recv_msg_size: 4194304  # 4MB
+    max_send_msg_size: 4194304  # 4MB
+    
+    # 超时配置
+    dial_timeout: 5s
+    keepalive:
+      time: 30s
+      timeout: 5s
+      permit_without_stream: true
+      
+  # 中间件配置
+  middleware:
+    # 日志中间件
+    logging:
+      enabled: true
+      level: "info"
+      
+    # 错误处理中间件
+    error_handling:
+      enabled: true
+      
+    # 健康检查
+    health_check:
+      enabled: true
+      
+# 服务发现配置（预留）
+service_discovery:
+  enabled: false
+  
+# TLS配置（预留）
+tls:
+  enabled: false

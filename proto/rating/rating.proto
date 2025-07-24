@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+package movieinfo.rating;
+
+option go_package = "github.com/3inchtime/movieinfo/proto/rating";
+
+import "common/common.proto";
+import "google/protobuf/timestamp.proto";
+
+// 评分数据结构
+message Rating {
+  int64 id = 1;
+  int64 user_id = 2;
+  int64 movie_id = 3;
+  int32 score = 4; // 1-5分
+  string comment = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+// 创建评分请求
+message CreateRatingRequest {
+  int64 user_id = 1;
+  int64 movie_id = 2;
+  int32 score = 3; // 1-5分
+  string comment = 4;
+}
+
+message CreateRatingResponse {
+  movieinfo.common.CommonResponse common = 1;
+  Rating rating = 2;
+}
+
+// 获取评分请求
+message GetRatingRequest {
+  int64 id = 1;
+}
+
+message GetRatingResponse {
+  movieinfo.common.CommonResponse common = 1;
+  Rating rating = 2;
+}
+
+// 更新评分请求
+message UpdateRatingRequest {
+  int64 id = 1;
+  int32 score = 2;
+  string comment = 3;
+}
+
+message UpdateRatingResponse {
+  movieinfo.common.CommonResponse common = 1;
+  Rating rating = 2;
+}
+
+// 删除评分请求
+message DeleteRatingRequest {
+  int64 id = 1;
+}
+
+message DeleteRatingResponse {
+  movieinfo.common.CommonResponse common = 1;
+}
+
+// 列出评分请求
+message ListRatingsRequest {
+  movieinfo.common.PageRequest page = 1;
+  int64 user_id = 2; // 可选：按用户筛选
+  int64 movie_id = 3; // 可选：按电影筛选
+}
+
+message ListRatingsResponse {
+  movieinfo.common.CommonResponse common = 1;
+  repeated Rating ratings = 2;
+  movieinfo.common.PageResponse page = 3;
+}
+
+// 获取电影平均评分请求
+message GetMovieAverageRatingRequest {
+  int64 movie_id = 1;
+}
+
+message GetMovieAverageRatingResponse {
+  movieinfo.common.CommonResponse common = 1;
+  double average_rating = 2;
+  int64 total_ratings = 3;
+}
+
+// 健康检查请求
+message HealthCheckRequest {
+  string service = 1;
+}
+
+message HealthCheckResponse {
+  string status = 1;
+  string message = 2;
+}

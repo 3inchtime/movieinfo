@@ -1,0 +1,108 @@
+syntax = "proto3";
+
+package movieinfo.movie;
+
+option go_package = "github.com/3inchtime/movieinfo/proto/movie";
+
+import "google/protobuf/timestamp.proto";
+import "common/common.proto";
+
+// 电影信息 - 简化版本
+message Movie {
+  int64 id = 1;             // 电影ID
+  string title = 2;         // 电影标题
+  string description = 3;   // 电影描述
+  string poster_url = 4;    // 海报URL
+  int32 duration = 5;       // 时长（分钟）
+  google.protobuf.Timestamp release_date = 6; // 上映日期
+  string language = 7;      // 语言
+  repeated string genres = 8; // 类型列表
+  repeated string directors = 9; // 导演列表
+  repeated string actors = 10;   // 演员列表
+  double average_rating = 11;    // 平均评分
+  int64 rating_count = 12;       // 评分数量
+  google.protobuf.Timestamp created_at = 13; // 创建时间
+  google.protobuf.Timestamp updated_at = 14; // 更新时间
+}
+
+// 创建电影请求
+message CreateMovieRequest {
+  string title = 1;         // 电影标题
+  string description = 2;   // 电影描述
+  string poster_url = 3;    // 海报URL
+  int32 duration = 4;       // 时长（分钟）
+  google.protobuf.Timestamp release_date = 5; // 上映日期
+  string language = 6;      // 语言
+  repeated string genres = 7;    // 类型列表
+  repeated string directors = 8; // 导演列表
+  repeated string actors = 9;    // 演员列表
+}
+
+message CreateMovieResponse {
+  movieinfo.common.CommonResponse common = 1;
+  Movie movie = 2;          // 创建的电影信息
+}
+
+// 获取电影请求
+message GetMovieRequest {
+  int64 id = 1;             // 电影ID
+}
+
+message GetMovieResponse {
+  movieinfo.common.CommonResponse common = 1;
+  Movie movie = 2;          // 电影信息
+}
+
+// 更新电影请求
+message UpdateMovieRequest {
+  int64 id = 1;             // 电影ID
+  string title = 2;         // 电影标题
+  string description = 3;   // 电影描述
+  string poster_url = 4;    // 海报URL
+  int32 duration = 5;       // 时长（分钟）
+  google.protobuf.Timestamp release_date = 6; // 上映日期
+  string language = 7;      // 语言
+  repeated string genres = 8;    // 类型列表
+  repeated string directors = 9; // 导演列表
+  repeated string actors = 10;   // 演员列表
+}
+
+message UpdateMovieResponse {
+  movieinfo.common.CommonResponse common = 1;
+  Movie movie = 2;          // 更新后的电影信息
+}
+
+// 删除电影请求
+message DeleteMovieRequest {
+  int64 id = 1;             // 电影ID
+}
+
+message DeleteMovieResponse {
+  movieinfo.common.CommonResponse common = 1;
+}
+
+// 列出电影请求
+message ListMoviesRequest {
+  movieinfo.common.PageRequest page = 1; // 分页参数
+  repeated string genres = 2;            // 类型过滤
+  string search = 3;                     // 搜索关键词
+  string language = 4;                   // 语言过滤
+}
+
+message ListMoviesResponse {
+  movieinfo.common.CommonResponse common = 1;
+  repeated Movie movies = 2; // 电影列表
+  movieinfo.common.PageResponse page = 3; // 分页信息
+}
+
+// 搜索电影请求
+message SearchMoviesRequest {
+  string query = 1;         // 搜索查询
+  movieinfo.common.PageRequest page = 2; // 分页参数
+}
+
+message SearchMoviesResponse {
+  movieinfo.common.CommonResponse common = 1;
+  repeated Movie movies = 2; // 电影列表
+  movieinfo.common.PageResponse page = 3; // 分页信息
+}

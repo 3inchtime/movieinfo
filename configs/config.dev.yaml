@@ -1,0 +1,22 @@
+# configs/config.dev.yaml - 开发环境配置
+app:
+  debug: true
+  environment: "development"
+
+log:
+  level: "debug"
+  format: "text"
+  output: "stdout"
+```
+
+```yaml
+# configs/config.prod.yaml - 生产环境配置
+app:
+  debug: false
+  environment: "production"
+  port: 80
+
+log:
+  level: "warn"
+  format: "json"
+  output: "file"

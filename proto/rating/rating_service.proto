@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package movieinfo.rating;
+
+option go_package = "github.com/3inchtime/movieinfo/proto/rating";
+
+import "rating/rating.proto";
+import "common/common.proto";
+
+// 评分服务 - 简化版本
+service RatingService {
+  // 基础评分管理
+  rpc CreateRating(CreateRatingRequest) returns (CreateRatingResponse);
+  rpc GetRating(GetRatingRequest) returns (GetRatingResponse);
+  rpc UpdateRating(UpdateRatingRequest) returns (UpdateRatingResponse);
+  rpc DeleteRating(DeleteRatingRequest) returns (DeleteRatingResponse);
+  rpc ListRatings(ListRatingsRequest) returns (ListRatingsResponse);
+  
+  // 统计功能
+  rpc GetMovieAverageRating(GetMovieAverageRatingRequest) returns (GetMovieAverageRatingResponse);
+  
+  // 健康检查
+  rpc HealthCheck(movieinfo.common.HealthCheckRequest) returns (movieinfo.common.HealthCheckResponse);
+}

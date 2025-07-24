@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package movieinfo.common;
+
+option go_package = "github.com/3inchtime/movieinfo/proto/common";
+
+import "google/protobuf/timestamp.proto";
+
+// 分页请求 - 简化版本，只包含必要字段
+message PageRequest {
+  int32 page = 1;           // 页码，从1开始
+  int32 page_size = 2;      // 每页大小，默认10，最大100
+}
+
+// 分页响应 - 简化版本
+message PageResponse {
+  int32 page = 1;           // 当前页码
+  int32 page_size = 2;      // 每页大小
+  int64 total = 3;          // 总记录数
+  int32 total_pages = 4;    // 总页数
+}
+
+// 通用响应 - 大幅简化，只保留核心信息
+message CommonResponse {
+  bool success = 1;         // 是否成功
+  string message = 2;       // 响应消息
+  google.protobuf.Timestamp timestamp = 3; // 响应时间
+}
+
+// 健康检查 - 保持标准格式
+message HealthCheckRequest {
+  string service = 1;       // 服务名称
+}
+
+message HealthCheckResponse {
+  enum ServingStatus {
+    UNKNOWN = 0;
+    SERVING = 1;
+    NOT_SERVING = 2;
+  }
+  ServingStatus status = 1;
+  string message = 2;
+}

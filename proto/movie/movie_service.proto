@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package movieinfo.movie;
+
+option go_package = "github.com/3inchtime/movieinfo/proto/movie";
+
+import "movie/movie.proto";
+import "common/common.proto";
+
+// 电影服务 - 简化版本
+service MovieService {
+  // 基础电影管理
+  rpc CreateMovie(CreateMovieRequest) returns (CreateMovieResponse);
+  rpc GetMovie(GetMovieRequest) returns (GetMovieResponse);
+  rpc UpdateMovie(UpdateMovieRequest) returns (UpdateMovieResponse);
+  rpc DeleteMovie(DeleteMovieRequest) returns (DeleteMovieResponse);
+  rpc ListMovies(ListMoviesRequest) returns (ListMoviesResponse);
+  
+  // 搜索功能
+  rpc SearchMovies(SearchMoviesRequest) returns (SearchMoviesResponse);
+  
+  // 健康检查
+  rpc HealthCheck(movieinfo.common.HealthCheckRequest) returns (movieinfo.common.HealthCheckResponse);
+}
