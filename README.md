@@ -6,16 +6,15 @@
 
 ## 项目简介
 
-MovieInfo 是一个基于 Go 语言和 Gin 框架开发的电影信息网站，采用服务化架构设计。项目使用 Gin Template 作为前端模板引擎，提供用户友好的电影浏览、搜索、评论和评分功能。
+MovieInfo 是一个基于 Go 语言开发的电影信息网站学习项目。项目采用多服务架构设计，服务间使用 gRPC 通信，为后期微服务改造做准备。
 
 ### 核心特性
 
-- 🎬 **电影信息管理** - 完整的电影详情、列表展示
-- 👤 **用户系统** - 注册、登录、密码重置
-- 💬 **评论系统** - 用户评论和评分功能
-- 🏠 **主页服务** - 统一的用户访问入口
-- 🔄 **服务化架构** - 四个独立服务，为后期微服务化做准备
-- 🚀 **高性能** - gRPC 服务间通信，Redis 缓存加速
+- 🎬 **电影信息展示** - 电影列表、详情查看
+- 👤 **用户系统** - 用户注册、登录
+- ⭐ **评分功能** - 用户评分和评价
+- 🏠 **统一入口** - Web 前端访问入口
+- 🔗 **gRPC 通信** - 服务间高效通信
 
 ### 技术栈
 
@@ -24,230 +23,206 @@ MovieInfo 是一个基于 Go 语言和 Gin 框架开发的电影信息网站，�
 - **服务通信**: gRPC
 - **数据库**: MySQL
 - **缓存**: Redis
-- **容器化**: Docker & Docker Compose
 
 ### 系统架构
 
 ```
-┌─────────────────┐    ┌─────────────────┐
-│   用户访问      │───▶│   主页服务      │
-│   (Browser)     │    │  (Web Gateway)  │
-└─────────────────┘    └─────────────────┘
-                              │
-                    ┌─────────┼─────────┐
-                    │         │         │
-                    ▼         ▼         ▼
-            ┌─────────────┐ ┌─────────────┐ ┌─────────────┐
-            │   用户服务  │ │   电影服务  │ │ 评论打分服务│
-            │(User Service)│ │(Movie Service)│ │(Comment Service)│
-            └─────────────┘ └─────────────┘ └─────────────┘
-                    │         │         │
-                    └─────────┼─────────┘
-                              │
-                              ▼
-                    ┌─────────────────┐
-                    │   数据存储层    │
-                    │  MySQL + Redis  │
-                    └─────────────────┘
+┌─────────────────┐
+│   用户访问      │
+│   (Browser)     │
+└─────────┬───────┘
+          │
+          ▼
+┌─────────────────┐
+│   Web 服务      │
+│  (前端入口)     │
+└─────────┬───────┘
+          │ gRPC
+    ┌─────┼─────┐
+    │     │     │
+    ▼     ▼     ▼
+┌───────┐ ┌───────┐ ┌───────┐
+│用户服务│ │电影服务│ │评分服务│
+└───┬───┘ └───┬───┘ └───┬───┘
+    │         │         │
+    └─────────┼─────────┘
+              │
+              ▼
+    ┌─────────────────┐
+    │  MySQL + Redis  │
+    └─────────────────┘
 ```
-
-
 
 ### 服务说明
 
-| 服务名称 | 端口 | 功能描述 | 技术栈 |
-|---------|------|----------|--------|
-| **主页服务** | 8080 | Web网关，用户访问入口，页面渲染 | Gin + Gin Template |
-| **用户服务** | 8081 | 用户注册、登录、密码管理 | Gin + gRPC |
-| **电影服务** | 8082 | 电影信息管理、列表查询 | Gin + gRPC |
-| **评论打分服务** | 8083 | 电影评论、评分功能 | Gin + gRPC |
+| 服务名称 | 端口 | 功能描述 |
+|---------|------|----------|
+| **Web服务** | 8080 | 前端页面，用户访问入口 |
+| **用户服务** | 8081 | 用户注册、登录管理 |
+| **电影服务** | 8082 | 电影信息管理 |
+| **评分服务** | 8083 | 电影评分和评价功能 |
 
-## 快速开始
-
-### 环境要求
-
-- Go 1.19+
-- MySQL 8.0+
-- Redis 6.0+
-- Docker & Docker Compose (可选)
-
-### 项目结构
+## 项目结构
 
 ```
 movieinfo/
-├── cmd/                    # 应用程序入口
-│   ├── web/               # 主页服务
+├── cmd/                    # 服务启动入口
+│   ├── web/               # Web服务
 │   ├── user/              # 用户服务
 │   ├── movie/             # 电影服务
-│   └── comment/           # 评论打分服务
+│   └── rating/            # 评分服务
 ├── internal/              # 内部包
 │   ├── config/            # 配置管理
 │   ├── models/            # 数据模型
 │   ├── handlers/          # HTTP处理器
-│   ├── services/          # 业务逻辑
-│   └── middleware/        # 中间件
+│   └── services/          # 业务逻辑
 ├── pkg/                   # 公共包
 │   ├── database/          # 数据库连接
 │   ├── redis/             # Redis连接
 │   └── grpc/              # gRPC客户端
-├── proto/                 # Protocol Buffers定义
+├── proto/                 # gRPC协议定义
 ├── templates/             # HTML模板
 ├── static/                # 静态资源
 ├── configs/               # 配置文件
-├── docs/                  # 项目文档
 ├── go.mod
-├── go.sum
 └── README.md
 ```
 
-### 功能说明
+## 功能列表
 
-#### 主页服务 (Web Gateway)
-- **首页展示**: 展示热门电影、最新电影、推荐电影
-- **电影搜索**: 支持按电影名称、类型、年份等条件搜索
-- **电影详情**: 展示电影详细信息、评分、评论列表
-- **用户界面**: 提供用户登录、注册、个人中心页面
-- **页面路由**: 统一管理所有前端页面路由和模板渲染
+### 基础功能
 
-#### 用户服务 (User Service)
-- **用户注册**: 支持邮箱注册，密码加密存储
-- **用户登录**: JWT token认证，支持记住登录状态
-- **密码管理**: 密码重置、修改密码功能
-- **用户信息**: 个人资料管理、头像上传
-- **权限控制**: 基于角色的访问控制
+#### 用户功能
+- 用户注册
+- 用户登录/登出
+- 密码修改
 
-#### 电影服务 (Movie Service)
-- **电影管理**: 电影信息的增删改查
-- **分类管理**: 电影类型、年份、地区分类
-- **搜索功能**: 支持多条件组合搜索和模糊搜索
-- **数据缓存**: 热门电影数据Redis缓存
-- **分页查询**: 支持电影列表分页展示
+#### 电影功能
+- 电影列表浏览
+- 电影详情查看
+- 电影搜索
+- 电影分类筛选
 
-#### 评论打分服务 (Comment Service)
-- **评论功能**: 用户对电影发表评论
-- **评分系统**: 1-10分评分，支持半分
-- **评分统计**: 计算电影平均分、评分分布
-- **评论管理**: 评论的审核、删除功能
-- **互动功能**: 评论点赞、回复功能
+#### 评分功能
+- 电影评分（1-10分）
+- 个人评分记录
+- 电影平均评分显示
 
-### 访问应用
 
-启动成功后，可以通过以下地址访问：
+## 功能模块
 
-- **主页服务**: http://localhost:8080
-- **用户服务API**: http://localhost:8081 (gRPC: 9081)
-- **电影服务API**: http://localhost:8082 (gRPC: 9082)
-- **评论服务API**: http://localhost:8083 (gRPC: 9083)
+### Web服务
+- 首页展示
+- 电影列表和详情页面
+- 用户登录注册页面
+- 调用后端gRPC服务
+
+### 用户服务
+- 用户注册
+- 用户登录
+
+### 电影服务
+- 电影信息查询
+- 电影列表展示
+- 基础搜索功能
+
+### 评分服务
+- 电影评分
+- 评分管理
+
+## 环境要求
+
+- Go 1.19+
+- MySQL 8.0+
+- Redis 6.0+
+
+
+## 快速开始
+
+### 1. 克隆项目
+```bash
+git clone https://github.com/3inchtime/movieinfo.git
+cd movieinfo
+```
+
+### 2. 安装依赖
+```bash
+go mod tidy
+```
+
+### 3. 配置数据库
+- 创建MySQL数据库
+- 配置Redis连接
+- 修改配置文件
+
+### 4. 启动服务
+```bash
+# 启动用户服务
+go run cmd/user/main.go
+
+# 启动电影服务
+go run cmd/movie/main.go
+
+# 启动评分服务
+go run cmd/rating/main.go
+
+# 启动Web服务
+go run cmd/web/main.go
+```
+
+### 5. 访问应用
+打开浏览器访问: http://localhost:8080
 
 ## 开发文档
 
-### 📋 1. 项目设计
-- [项目需求分析](docs/01-design/01-requirements.md)
-- [系统架构设计](docs/01-design/02-architecture.md)
-- [技术选型说明](docs/01-design/03-tech-stack.md)
-- [数据库设计](docs/01-design/04-database-design.md)
-- [API接口设计](docs/01-design/05-api-design.md)
-- [缓存策略设计](docs/01-design/06-cache-strategy.md)
+本项目采用循序渐进的开发方式，将整个开发过程拆分为38个详细步骤，每个步骤都有独立的开发文档。
 
-### 🏗️ 2. 基础设施
-- [项目结构设计](docs/02-foundation/01-project-structure.md)
-- [开发环境搭建](docs/02-foundation/02-dev-environment.md)
-- [代码规范](docs/02-foundation/03-coding-standards.md)
-- [数据库连接池](docs/02-foundation/04-database-connection.md)
-- [GORM模型定义](docs/02-foundation/05-gorm-models.md)
-- [gRPC框架配置](docs/02-foundation/06-grpc-setup.md)
+### 开发文档架构
+- [开发文档架构](docs/开发文档架构.md) - 完整的开发步骤规划和文档结构
 
-### 👤 3. 用户服务
-- [用户注册API](docs/03-user-service/01-registration.md)
-- [用户认证系统](docs/03-user-service/02-authentication.md)
-- [密码管理功能](docs/03-user-service/03-password-management.md)
-- [用户资料管理](docs/03-user-service/04-profile-management.md)
-- [权限控制系统](docs/03-user-service/05-access-control.md)
+### 开发阶段
+1. **项目基础搭建** (步骤1-3) - 项目初始化、数据库设计、配置管理
+2. **基础设施搭建** (步骤4-6) - 数据库连接、缓存系统、日志系统
+3. **gRPC协议定义** (步骤7-9) - 各服务的协议定义
+4. **数据模型层** (步骤10-12) - 数据访问层实现
+5. **用户服务开发** (步骤13-16) - 用户相关功能实现
+6. **电影服务开发** (步骤17-20) - 电影相关功能实现
+7. **评分服务开发** (步骤21-24) - 评分相关功能实现
+8. **Web服务开发** (步骤25-30) - 前端页面和接口实现
+9. **系统集成与优化** (步骤31-34) - 性能优化和监控
+10. **测试与部署** (步骤35-38) - 测试和部署配置
 
-### 🎬 4. 电影服务
-- [电影CRUD操作](docs/04-movie-service/01-movie-crud.md)
-- [电影分类管理](docs/04-movie-service/02-category-management.md)
-- [搜索功能实现](docs/04-movie-service/03-search-functionality.md)
-- [Redis缓存策略](docs/04-movie-service/04-caching-strategy.md)
-- [分页查询实现](docs/04-movie-service/05-pagination.md)
+### 开发原则
+- 严格按照步骤顺序进行开发
+- 每个步骤都有完整的代码实现
+- 循序渐进，从0到1搭建整个系统
+- 每个步骤都包含测试验证
 
-### 💬 5. 评论服务
-- [评论功能开发](docs/05-comment-service/01-comment-system.md)
-- [评分系统实现](docs/05-comment-service/02-rating-system.md)
-- [评分统计计算](docs/05-comment-service/03-rating-statistics.md)
-- [评论审核管理](docs/05-comment-service/04-comment-moderation.md)
-- [互动功能开发](docs/05-comment-service/05-interaction-features.md)
 
-### 🏠 6. 主页服务
-- [Gin服务器配置](docs/06-web-service/01-server-config.md)
-- [首页功能实现](docs/06-web-service/02-homepage.md)
-- [搜索界面开发](docs/06-web-service/03-search-interface.md)
-- [电影详情页面](docs/06-web-service/04-movie-detail.md)
-- [用户界面开发](docs/06-web-service/05-user-interface.md)
-- [模板引擎使用](docs/06-web-service/06-template-engine.md)
-- [gRPC客户端集成](docs/06-web-service/07-grpc-client.md)
+## 开发计划
 
-### 🔒 7. 安全与测试
-- [安全机制配置](docs/07-security/01-security-config.md)
-- [CORS跨域配置](docs/07-security/02-cors-setup.md)
-- [输入验证机制](docs/07-security/03-input-validation.md)
-- [单元测试编写](docs/07-security/04-unit-testing.md)
-- [集成测试实现](docs/07-security/05-integration-testing.md)
+- [ ] 项目初始化和基础配置
+- [ ] 数据库模型设计
+- [ ] gRPC协议定义
+- [ ] 用户服务开发
+- [ ] 电影服务开发
+- [ ] 评分服务开发
+- [ ] Web前端开发
+- [ ] 基础测试
 
-### 🚀 8. 部署运维
-- [Docker容器化](docs/08-deployment/01-docker-setup.md)
-- [Docker Compose配置](docs/08-deployment/02-docker-compose.md)
-- [生产环境部署](docs/08-deployment/03-production-deployment.md)
-- [监控与日志](docs/08-deployment/04-monitoring-logging.md)
-- [性能优化指南](docs/08-deployment/05-performance-optimization.md)
-  
+## 微服务改造准备
 
-## 开发进度
+本项目虽然是学习项目，但在设计时已考虑微服务改造：
 
-当前项目处于核心功能开发阶段，按照以下顺序进行开发：
-
-1. ✅ **项目设计与环境搭建** - 完成需求分析和架构设计
-2. ⏳ **项目初始化与基础设施** - 待开始
-3. ⏳ **用户服务开发** - 待开始
-4. ⏳ **电影服务开发** - 待开始
-5. ⏳ **评论打分服务开发** - 待开始
-6. ⏳ **主页服务与前端开发** - 待开始
-7. ⏳ **安全与部署** - 待开始
-
-## 贡献指南
-
-我们欢迎所有形式的贡献！请按照以下步骤参与项目开发：
-
-### 开发流程
-
-1. Fork 项目到你的GitHub账户
-2. 创建功能分支 (`git checkout -b feature/功能名称`)
-3. 按照开发文档目录逐步实现功能
-4. 提交更改 (`git commit -m '添加某某功能'`)
-5. 推送到分支 (`git push origin feature/功能名称`)
-6. 创建 Pull Request
-
-### 代码规范
-
-- 遵循Go语言官方代码规范
-- 使用有意义的变量和函数命名
-- 添加必要的注释说明
-- 确保代码可读性和可维护性
+1. **服务拆分**: 按业务领域拆分为独立服务
+2. **gRPC通信**: 服务间使用gRPC协议
+3. **配置管理**: 独立的配置管理
+4. **数据隔离**: 为每个服务预留独立数据存储的可能
 
 ## 许可证
 
-本项目采用 MIT 许可证 - 查看 [LICENSE](LICENSE) 文件了解详情。
-
-## 联系方式
-
-- 项目维护者: [Your Name](mailto:your.email@example.com)
-- 项目地址: [https://github.com/your-username/movieinfo](https://github.com/your-username/movieinfo)
-- 问题反馈: [Issues](https://github.com/your-username/movieinfo/issues)
-
-## 致谢
-
-感谢所有为这个项目做出贡献的开发者们！
+本项目采用 MIT 许可证。
 
 ---
 
-⭐ 如果这个项目对你有帮助，请给我们一个 Star！
+⭐ 这是一个学习项目，欢迎交流和改进！
